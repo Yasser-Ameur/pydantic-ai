@@ -1224,6 +1224,7 @@ class AbstractAgent(Generic[AgentDepsT, OutputDataT], ABC):
         conversation_id: str | None = None,
         run_id: str | None = None,
         model: models.Model | models.KnownModelName | str | None = None,
+        instructions: _instructions.AgentInstructions[AgentDepsT] = None,
         deps: AgentDepsT = None,
         model_settings: AgentModelSettings[AgentDepsT] | None = None,
         usage_limits: _usage.UsageLimits | None = None,
@@ -1252,6 +1253,7 @@ class AbstractAgent(Generic[AgentDepsT, OutputDataT], ABC):
         conversation_id: str | None = None,
         run_id: str | None = None,
         model: models.Model | models.KnownModelName | str | None = None,
+        instructions: _instructions.AgentInstructions[AgentDepsT] = None,
         deps: AgentDepsT = None,
         model_settings: AgentModelSettings[AgentDepsT] | None = None,
         usage_limits: _usage.UsageLimits | None = None,
@@ -1279,6 +1281,7 @@ class AbstractAgent(Generic[AgentDepsT, OutputDataT], ABC):
         conversation_id: str | None = None,
         run_id: str | None = None,
         model: models.Model | models.KnownModelName | str | None = None,
+        instructions: _instructions.AgentInstructions[AgentDepsT] = None,
         deps: AgentDepsT = None,
         model_settings: AgentModelSettings[AgentDepsT] | None = None,
         usage_limits: _usage.UsageLimits | None = None,
@@ -1342,6 +1345,7 @@ class AbstractAgent(Generic[AgentDepsT, OutputDataT], ABC):
             conversation_id: ID of the conversation this run belongs to. Pass `'new'` to start a fresh conversation, ignoring any `conversation_id` already on `message_history`. If omitted, falls back to the most recent `conversation_id` on `message_history` or a freshly generated UUID7, except that an agent with a `TemporalDurability`, `DBOSDurability` or `PrefectDurability` capability, run inside a workflow or flow, gets one derived from the `run_id` so it stays the same when the engine re-executes the run.
             run_id: Optional ID for this agent run. Unlike `conversation_id`, never inherited from `message_history`. Passing an empty string, or a value that already appears on `message_history`, raises `UserError` because both break `new_messages()`; use `conversation_id` to correlate across turns or deferred-tool resume. If omitted, a fresh UUID7 is generated, except that an agent with a `TemporalDurability`, `DBOSDurability` or `PrefectDurability` capability, run inside a workflow or flow, gets one derived from the workflow or flow run so it stays the same when the engine re-executes the run.
             model: Optional model to use for this run, required if `model` was not set when creating the agent.
+            instructions: Optional additional instructions to use for this run.
             deps: Optional dependencies to use for this run.
             model_settings: Optional settings to use for this model's request, or a callable
                 that receives [`RunContext`][pydantic_ai.tools.RunContext] and returns settings.
@@ -1387,6 +1391,7 @@ class AbstractAgent(Generic[AgentDepsT, OutputDataT], ABC):
                 conversation_id=conversation_id,
                 run_id=run_id,
                 model=model,
+                instructions=instructions,
                 deps=deps,
                 model_settings=model_settings,
                 usage_limits=usage_limits,

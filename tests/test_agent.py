@@ -4005,6 +4005,16 @@ def test_agent_conversation_id_surfaces_on_sync_stream() -> None:
     assert result.conversation_id == 'conv-sync-stream'
 
 
+def test_run_stream_sync_instructions() -> None:
+    """`run_stream_sync` accepts per-run `instructions` and sends them to the model, like `run_stream`."""
+    agent = Agent(TestModel(custom_output_text='ok'))
+    with agent.run_stream_sync('hi', instructions='Per-run instructions') as stream:
+        assert stream.get_output() == 'ok'
+        request = stream.all_messages()[0]
+    assert isinstance(request, ModelRequest)
+    assert request.instructions == 'Per-run instructions'
+
+
 async def test_agent_run_result_conversation_id_property() -> None:
     """`AgentRunResult.conversation_id` returns the run's conversation ID."""
     agent = Agent(TestModel(custom_output_text='ok'))
